@@ -122,14 +122,17 @@ export default function MotionSensor() {
 
   const sendControlsUpdate = useCallback(() => {
     if (websocket && websocket.readyState === WebSocket.OPEN) {
+      const timestamp = performance.now();
       websocket.send(JSON.stringify({
         controls: controlsRef.current,
         acceleration: null,
         accelerationIncludingGravity: null,
         rotationRate: null,
+        timestamp,
+        interval,
       }));
     }
-  }, [websocket]);
+  }, [websocket, interval]);
 
 
   const requestPermission = useCallback(async () => {
@@ -238,6 +241,7 @@ export default function MotionSensor() {
           <ControlButton
             active={controls.front}
             onPress={() => {
+              console.log(`[FRONT PRESSED] interval=${interval}ms`);
               setControls((prev) => ({ ...prev, front: true }));
               controlsRef.current = { ...controlsRef.current, front: true };
               sendControlsUpdate();
