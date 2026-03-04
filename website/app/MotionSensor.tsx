@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface Acceleration {
   x: number | null;
@@ -12,6 +12,46 @@ interface RotationRate {
   alpha: number | null;
   beta: number | null;
   gamma: number | null;
+}
+
+interface Controls {
+  front: boolean;
+  back: boolean;
+  left: boolean;
+  right: boolean;
+  jump: boolean;
+}
+
+function ControlButton({
+  active,
+  onPress,
+  onRelease,
+  children,
+}: {
+  active: boolean;
+  onPress: () => void;
+  onRelease: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onPointerDown={(e) => {
+        e.preventDefault();
+        onPress();
+      }}
+      onPointerUp={onRelease}
+      onPointerLeave={onRelease}
+      onContextMenu={(e) => e.preventDefault()}
+      className={`rounded-lg px-4 py-2 font-medium transition-colors touch-none select-none ${
+        active
+          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+          : "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
+      }`}
+    >
+      {children}
+    </button>
+  );
 }
 
 export default function MotionSensor() {
@@ -27,6 +67,18 @@ export default function MotionSensor() {
     beta: null,
     gamma: null,
   });
+  const [controls, setControls] = useState<Controls>({
+    front: false,
+    back: false,
+    left: false,
+    right: false,
+    jump: false,
+  });
+  const controlsRef = useRef(controls);
+  useEffect(() => {
+    controlsRef.current = controls;
+  }, [controls]);
+
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8765";
@@ -55,15 +107,16 @@ export default function MotionSensor() {
     };
   }, [websocketUrl]);
 
-  const sendMessage = (acceleration: Acceleration, 
-          accelerationIncludingGravity: Acceleration,
-          rotationRate: RotationRate) => {
+  const sendMessage = (acceleration: Acceleration,
+    accelerationIncludingGravity: Acceleration,
+    rotationRate: RotationRate) => {
     if (websocket && websocket.readyState === WebSocket.OPEN) {
-      websocket.send(JSON.stringify({ acceleration, 
-        accelerationIncludingGravity, 
-        rotationRate }));
-    } else {
-      console.log('WebSocket not connected');
+      websocket.send(JSON.stringify({
+        controls: controlsRef.current,
+        acceleration,
+        accelerationIncludingGravity,
+        rotationRate,
+      }));
     }
   };
 
@@ -166,6 +219,48 @@ export default function MotionSensor() {
 
   return (
     <div className="grid w-full max-w-md gap-6">
+      <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+          Controls
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          <ControlButton
+            active={controls.front}
+            onPress={() => setControls((prev) => ({ ...prev, front: true }))}
+            onRelease={() => setControls((prev) => ({ ...prev, front: false }))}
+          >
+            Front
+          </ControlButton>
+          <ControlButton
+            active={controls.back}
+            onPress={() => setControls((prev) => ({ ...prev, back: true }))}
+            onRelease={() => setControls((prev) => ({ ...prev, back: false }))}
+          >
+            Back
+          </ControlButton>
+          <ControlButton
+            active={controls.left}
+            onPress={() => setControls((prev) => ({ ...prev, left: true }))}
+            onRelease={() => setControls((prev) => ({ ...prev, left: false }))}
+          >
+            Left
+          </ControlButton>
+          <ControlButton
+            active={controls.right}
+            onPress={() => setControls((prev) => ({ ...prev, right: true }))}
+            onRelease={() => setControls((prev) => ({ ...prev, right: false }))}
+          >
+            Right
+          </ControlButton>
+          <ControlButton
+            active={controls.jump}
+            onPress={() => setControls((prev) => ({ ...prev, jump: true }))}
+            onRelease={() => setControls((prev) => ({ ...prev, jump: false }))}
+          >
+            Jump
+          </ControlButton>
+        </div>
+      </section>
       <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Accelerometer (m/s²)
