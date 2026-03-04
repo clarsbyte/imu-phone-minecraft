@@ -81,8 +81,10 @@ export default function MotionSensor() {
 
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [rtt, setRtt] = useState<number | null>(null);
   const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8765";
   const [websocket, setWebsocket] = useState<WebSocket | null>(null);
+  const lastMotionSendRef = useRef<number>(0);
 
   useEffect(() => {
     const ws = new WebSocket(websocketUrl);
@@ -94,7 +96,14 @@ export default function MotionSensor() {
     };
 
     ws.onmessage = (event) => {
-      console.log(event.data);
+      try {
+        const data = JSON.parse(event.data);
+        if (data.timestamp) {
+          setRtt(Date.now() - data.timestamp);
+        }
+      } catch (e) {
+        // Not JSON, ignore
+      }
     };
 
     ws.onclose = () => {
@@ -186,16 +195,20 @@ export default function MotionSensor() {
       setRotationRate(rotation);
       if (event.interval) setInterval(event.interval);
 
-      // Send motion data with timestamp
-      if (websocket && websocket.readyState === WebSocket.OPEN) {
-        websocket.send(JSON.stringify({
-          controls: controlsRef.current,
-          acceleration: accel,
-          accelerationIncludingGravity: accelGravity,
-          rotationRate: rotation,
-          timestamp: Date.now(),
-          interval,
-        }));
+      // Throttle motion sends to 10Hz (100ms) to reduce network load
+      const now = Date.now();
+      if (now - lastMotionSendRef.current > 100) {
+        lastMotionSendRef.current = now;
+        if (websocket && websocket.readyState === WebSocket.OPEN) {
+          websocket.send(JSON.stringify({
+            controls: controlsRef.current,
+            acceleration: accel,
+            accelerationIncludingGravity: accelGravity,
+            rotationRate: rotation,
+            timestamp: Date.now(),
+            interval,
+          }));
+        }
       }
     };
 
@@ -243,6 +256,14 @@ export default function MotionSensor() {
 
   return (
     <div className="grid w-full max-w-md gap-6">
+      <section className="rounded-xl border border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
+          Network Status
+        </h2>
+        <div className="font-mono text-lg">
+          <div>RTT: {rtt !== null ? `${rtt}ms` : "—"}</div>
+        </div>
+      </section>
       <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Controls
