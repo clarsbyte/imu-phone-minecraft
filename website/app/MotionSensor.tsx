@@ -79,6 +79,10 @@ export default function MotionSensor() {
     controlsRef.current = controls;
   }, [controls]);
 
+  const accelerationRef = useRef(acceleration);
+  const accelerationIncludingGravityRef = useRef(accelerationIncludingGravity);
+  const rotationRateRef = useRef(rotationRate);
+
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [rtt, setRtt] = useState<number | null>(null);
@@ -134,9 +138,9 @@ export default function MotionSensor() {
       const timestamp = Date.now();
       websocket.send(JSON.stringify({
         controls: controlsRef.current,
-        acceleration: null,
-        accelerationIncludingGravity: null,
-        rotationRate: null,
+        acceleration: accelerationRef.current,
+        accelerationIncludingGravity: accelerationIncludingGravityRef.current,
+        rotationRate: rotationRateRef.current,
         timestamp,
         interval,
       }));
@@ -193,6 +197,9 @@ export default function MotionSensor() {
       setAcceleration(accel);
       setAccelerationIncludingGravity(accelGravity);
       setRotationRate(rotation);
+      accelerationRef.current = accel;
+      accelerationIncludingGravityRef.current = accelGravity;
+      rotationRateRef.current = rotation;
       if (event.interval) setInterval(event.interval);
 
       // Throttle motion sends to 10Hz (100ms) to reduce network load
