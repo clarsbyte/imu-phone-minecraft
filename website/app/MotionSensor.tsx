@@ -29,6 +29,44 @@ export default function MotionSensor() {
   });
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
+  const [websocket, setWebsocket] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    const ws = new WebSocket(websocketUrl);
+
+    ws.onopen = () => {
+      console.log('Connected to WebSocket');
+      ws.send('Hello, WebSocket!');
+      setWebsocket(ws);
+    };
+
+    ws.onmessage = (event) => {
+      console.log(event.data);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket closed');
+      setWebsocket(null);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [websocketUrl]);
+
+  const sendMessage = (acceleration: Acceleration, 
+          accelerationIncludingGravity: Acceleration,
+          rotationRate: RotationRate) => {
+    if (websocket && websocket.readyState === WebSocket.OPEN) {
+      websocket.send(JSON.stringify({ acceleration, 
+        accelerationIncludingGravity, 
+        rotationRate }));
+    } else {
+      console.log('WebSocket not connected');
+    }
+  };
+
 
   const requestPermission = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -82,6 +120,7 @@ export default function MotionSensor() {
       if (event.interval) {
         setInterval(event.interval);
       }
+      sendMessage(acceleration, accelerationIncludingGravity, rotationRate);
     };
 
     window.addEventListener("devicemotion", handleMotion);

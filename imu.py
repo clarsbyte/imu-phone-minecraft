@@ -1,18 +1,24 @@
-import socket 
-import json
+import asyncio
+import websockets
 
-UDP_IP = # something
-UDP_PORT = 65000
+async def echo(websocket):
+    """
+    This function is called for every new client connection.
+    It receives messages and sends them back (echos them).
+    """
+    async for message in websocket:
+        print(f"Received: {message}")
+        await websocket.send(message)
+        print(f"Sent: {message}")
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
+async def main():
+    """
+    Starts the WebSocket server on localhost, port 8765.
+    """
+    # Use the serve function from the websockets library
+    async with websockets.serve(echo, "localhost", 8765):
+        await asyncio.Future() # Run forever
 
-while True:
-    data, addr = sock.recvfrom(4096) 
-    try:
-        imu_data = json.loads(data.decode())
-        print("Received IMU data:")
-        print(imu_data['accelZ'])
-    except:
-        print("Received non-JSON data:")
-        print(data)
+if __name__ == "__main__":
+    # Run the main function using asyncio
+    asyncio.run(main())
