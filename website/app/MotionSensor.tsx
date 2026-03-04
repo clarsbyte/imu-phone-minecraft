@@ -29,7 +29,7 @@ export default function MotionSensor() {
   });
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
+  const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8765";
   const [websocket, setWebsocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
