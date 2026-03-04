@@ -292,7 +292,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Forward_button_BE2.png" alt="Up" width={50} height={50} />
+            <img src="/buttons/Forward_button_BE2.png" alt="Up" width={50} height={50} draggable="false" className="pointer-events-none" />
           </ControlButton>
           <div />
           {/* Row 2: left, jump, right */}
@@ -309,7 +309,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Left_button_BE2.png" alt="Left" width={50} height={50} />
+            <img src="/buttons/Left_button_BE2.png" alt="Left" width={50} height={50} draggable="false" className="pointer-events-none" />
             </ControlButton>
           <ControlButton
             active={controls.jump}
@@ -324,7 +324,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Jump_button_BE2.png" alt="Jump" width={50} height={50} />
+            <img src="/buttons/Jump_button_BE2.png" alt="Jump" width={50} height={50} draggable="false" className="pointer-events-none" />
           </ControlButton>
           <ControlButton
             active={controls.right}
@@ -339,7 +339,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Right_button_BE2.png" alt="Right" width={50} height={50} />
+            <img src="/buttons/Right_button_BE2.png" alt="Right" width={50} height={50} draggable="false" className="pointer-events-none" />
           </ControlButton>
           {/* Row 3: empty, back, empty */}
           <div />
@@ -356,7 +356,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Backward_button_BE2.png" alt="Back" width={50} height={50} />
+            <img src="/buttons/Backward_button_BE2.png" alt="Back" width={50} height={50} draggable="false" className="pointer-events-none" />
           </ControlButton>
           <div />
         </div>
