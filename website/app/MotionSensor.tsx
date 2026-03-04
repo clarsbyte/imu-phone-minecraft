@@ -324,7 +324,7 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            <img src="/buttons/Jump_button_BE2.png" alt="Jump" width={50} height={50} draggable="false" className="pointer-events-none" />
+            <img src="/buttons/Jump_Button_BE2.png" alt="Jump" width={50} height={50} draggable="false" className="pointer-events-none" />
           </ControlButton>
           <ControlButton
             active={controls.right}
