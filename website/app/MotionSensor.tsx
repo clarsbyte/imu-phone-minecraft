@@ -46,7 +46,7 @@ function ControlButton({
       className={`rounded-lg px-4 py-2 font-medium transition-colors touch-none select-none ${
         active
           ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-          : "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
+          : "bg-zinc-200 text-zinc-700 dark:bg-transparent dark:text-zinc-300"
       }`}
     >
       {children}
@@ -275,7 +275,9 @@ export default function MotionSensor() {
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Controls
         </h2>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-3 gap-2 w-fit mx-auto" style={{ gridTemplateRows: "repeat(3, auto)" }}>
+          {/* Row 1: empty, forward, empty */}
+          <div />
           <ControlButton
             active={controls.front}
             onPress={() => {
@@ -290,23 +292,10 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            Front
+            <img src="/buttons/Forward_button_BE2.png" alt="Up" width={50} height={50} />
           </ControlButton>
-          <ControlButton
-            active={controls.back}
-            onPress={() => {
-              setControls((prev) => ({ ...prev, back: true }));
-              controlsRef.current = { ...controlsRef.current, back: true };
-              sendControlsUpdate();
-            }}
-            onRelease={() => {
-              setControls((prev) => ({ ...prev, back: false }));
-              controlsRef.current = { ...controlsRef.current, back: false };
-              sendControlsUpdate();
-            }}
-          >
-            Back
-          </ControlButton>
+          <div />
+          {/* Row 2: left, jump, right */}
           <ControlButton
             active={controls.left}
             onPress={() => {
@@ -320,7 +309,22 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            Left
+            <img src="/buttons/Left_button_BE2.png" alt="Left" width={50} height={50} />
+            </ControlButton>
+          <ControlButton
+            active={controls.jump}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, jump: true }));
+              controlsRef.current = { ...controlsRef.current, jump: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, jump: false }));
+              controlsRef.current = { ...controlsRef.current, jump: false };
+              sendControlsUpdate();
+            }}
+          >
+            <img src="/buttons/Jump_button_BE2.png" alt="Jump" width={50} height={50} />
           </ControlButton>
           <ControlButton
             active={controls.right}
@@ -335,23 +339,26 @@ export default function MotionSensor() {
               sendControlsUpdate();
             }}
           >
-            Right
+            <img src="/buttons/Right_button_BE2.png" alt="Right" width={50} height={50} />
           </ControlButton>
+          {/* Row 3: empty, back, empty */}
+          <div />
           <ControlButton
-            active={controls.jump}
+            active={controls.back}
             onPress={() => {
-              setControls((prev) => ({ ...prev, jump: true }));
-              controlsRef.current = { ...controlsRef.current, jump: true };
+              setControls((prev) => ({ ...prev, back: true }));
+              controlsRef.current = { ...controlsRef.current, back: true };
               sendControlsUpdate();
             }}
             onRelease={() => {
-              setControls((prev) => ({ ...prev, jump: false }));
-              controlsRef.current = { ...controlsRef.current, jump: false };
+              setControls((prev) => ({ ...prev, back: false }));
+              controlsRef.current = { ...controlsRef.current, back: false };
               sendControlsUpdate();
             }}
           >
-            Jump
+            <img src="/buttons/Backward_button_BE2.png" alt="Back" width={50} height={50} />
           </ControlButton>
+          <div />
         </div>
       </section>
       <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
