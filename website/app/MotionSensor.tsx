@@ -122,7 +122,7 @@ export default function MotionSensor() {
 
   const sendControlsUpdate = useCallback(() => {
     if (websocket && websocket.readyState === WebSocket.OPEN) {
-      const timestamp = performance.now();
+      const timestamp = Date.now();
       websocket.send(JSON.stringify({
         controls: controlsRef.current,
         acceleration: null,
@@ -186,7 +186,17 @@ export default function MotionSensor() {
       setRotationRate(rotation);
       if (event.interval) setInterval(event.interval);
 
-      sendMessage(accel, accelGravity, rotation);
+      // Send motion data with timestamp
+      if (websocket && websocket.readyState === WebSocket.OPEN) {
+        websocket.send(JSON.stringify({
+          controls: controlsRef.current,
+          acceleration: accel,
+          accelerationIncludingGravity: accelGravity,
+          rotationRate: rotation,
+          timestamp: Date.now(),
+          interval,
+        }));
+      }
     };
 
     window.addEventListener("devicemotion", handleMotion);
