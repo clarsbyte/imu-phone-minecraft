@@ -120,6 +120,17 @@ export default function MotionSensor() {
     }
   };
 
+  const sendControlsUpdate = useCallback(() => {
+    if (websocket && websocket.readyState === WebSocket.OPEN) {
+      websocket.send(JSON.stringify({
+        controls: controlsRef.current,
+        acceleration: null,
+        accelerationIncludingGravity: null,
+        rotationRate: null,
+      }));
+    }
+  }, [websocket]);
+
 
   const requestPermission = useCallback(async () => {
     if (typeof window === "undefined") return;
@@ -226,36 +237,76 @@ export default function MotionSensor() {
         <div className="flex flex-wrap gap-2">
           <ControlButton
             active={controls.front}
-            onPress={() => setControls((prev) => ({ ...prev, front: true }))}
-            onRelease={() => setControls((prev) => ({ ...prev, front: false }))}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, front: true }));
+              controlsRef.current = { ...controlsRef.current, front: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, front: false }));
+              controlsRef.current = { ...controlsRef.current, front: false };
+              sendControlsUpdate();
+            }}
           >
             Front
           </ControlButton>
           <ControlButton
             active={controls.back}
-            onPress={() => setControls((prev) => ({ ...prev, back: true }))}
-            onRelease={() => setControls((prev) => ({ ...prev, back: false }))}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, back: true }));
+              controlsRef.current = { ...controlsRef.current, back: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, back: false }));
+              controlsRef.current = { ...controlsRef.current, back: false };
+              sendControlsUpdate();
+            }}
           >
             Back
           </ControlButton>
           <ControlButton
             active={controls.left}
-            onPress={() => setControls((prev) => ({ ...prev, left: true }))}
-            onRelease={() => setControls((prev) => ({ ...prev, left: false }))}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, left: true }));
+              controlsRef.current = { ...controlsRef.current, left: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, left: false }));
+              controlsRef.current = { ...controlsRef.current, left: false };
+              sendControlsUpdate();
+            }}
           >
             Left
           </ControlButton>
           <ControlButton
             active={controls.right}
-            onPress={() => setControls((prev) => ({ ...prev, right: true }))}
-            onRelease={() => setControls((prev) => ({ ...prev, right: false }))}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, right: true }));
+              controlsRef.current = { ...controlsRef.current, right: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, right: false }));
+              controlsRef.current = { ...controlsRef.current, right: false };
+              sendControlsUpdate();
+            }}
           >
             Right
           </ControlButton>
           <ControlButton
             active={controls.jump}
-            onPress={() => setControls((prev) => ({ ...prev, jump: true }))}
-            onRelease={() => setControls((prev) => ({ ...prev, jump: false }))}
+            onPress={() => {
+              setControls((prev) => ({ ...prev, jump: true }));
+              controlsRef.current = { ...controlsRef.current, jump: true };
+              sendControlsUpdate();
+            }}
+            onRelease={() => {
+              setControls((prev) => ({ ...prev, jump: false }));
+              controlsRef.current = { ...controlsRef.current, jump: false };
+              sendControlsUpdate();
+            }}
           >
             Jump
           </ControlButton>
