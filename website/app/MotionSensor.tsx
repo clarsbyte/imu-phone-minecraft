@@ -96,31 +96,30 @@ export default function MotionSensor() {
     if (typeof window === "undefined" || permission !== "granted") return;
 
     const handleMotion = (event: DeviceMotionEvent) => {
-      if (event.acceleration) {
-        setAcceleration({
-          x: event.acceleration.x,
-          y: event.acceleration.y,
-          z: event.acceleration.z,
-        });
-      }
-      if (event.accelerationIncludingGravity) {
-        setAccelerationIncludingGravity({
-          x: event.accelerationIncludingGravity.x,
-          y: event.accelerationIncludingGravity.y,
-          z: event.accelerationIncludingGravity.z,
-        });
-      }
-      if (event.rotationRate) {
-        setRotationRate({
-          alpha: event.rotationRate.alpha,
-          beta: event.rotationRate.beta,
-          gamma: event.rotationRate.gamma,
-        });
-      }
-      if (event.interval) {
-        setInterval(event.interval);
-      }
-      sendMessage(acceleration, accelerationIncludingGravity, rotationRate);
+      const accel = event.acceleration
+        ? { x: event.acceleration.x, y: event.acceleration.y, z: event.acceleration.z }
+        : { x: null, y: null, z: null };
+      const accelGravity = event.accelerationIncludingGravity
+        ? {
+            x: event.accelerationIncludingGravity.x,
+            y: event.accelerationIncludingGravity.y,
+            z: event.accelerationIncludingGravity.z,
+          }
+        : { x: null, y: null, z: null };
+      const rotation = event.rotationRate
+        ? {
+            alpha: event.rotationRate.alpha,
+            beta: event.rotationRate.beta,
+            gamma: event.rotationRate.gamma,
+          }
+        : { alpha: null, beta: null, gamma: null };
+
+      setAcceleration(accel);
+      setAccelerationIncludingGravity(accelGravity);
+      setRotationRate(rotation);
+      if (event.interval) setInterval(event.interval);
+
+      sendMessage(accel, accelGravity, rotation);
     };
 
     window.addEventListener("devicemotion", handleMotion);
