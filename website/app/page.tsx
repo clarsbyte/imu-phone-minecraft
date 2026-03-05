@@ -43,7 +43,15 @@ export default function Home() {
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           IMU Minecraft Controller
         </h1>
-        <MotionSensor target_server={`ws://${confirmedServer}`} />
+        <MotionSensor target_server={
+          /^wss?:\/\//.test(confirmedServer)
+            ? confirmedServer
+            : confirmedServer.startsWith('https://')
+              ? confirmedServer.replace('https://', 'wss://')
+              : confirmedServer.startsWith('http://')
+                ? confirmedServer.replace('http://', 'ws://')
+                : `ws://${confirmedServer}`
+        } />
       </main>
     </div>
   );
