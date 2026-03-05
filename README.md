@@ -39,7 +39,7 @@ You should see a **"Connected"** message once a phone connects.
 
 ### 4. Open the Website on Your Phone
 
-1. Open the controller (https://playimu.clarissabuilds.com/)[website] on your phone's browser.
+1. Open the controller [website](https://playimu.clarissabuilds.com/) on your phone's browser.
 2. When prompted, enter the WebSocket address:
    - Local (same network): `localhost:8765`
    - Over the internet via ngrok: `wss://your-tunnel.ngrok-free.app`
