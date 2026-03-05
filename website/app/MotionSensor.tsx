@@ -263,14 +263,14 @@ export default function MotionSensor() {
 
   return (
     <div className="grid w-full max-w-md gap-6">
-      <section className="rounded-xl border border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950">
+      {/* <section className="rounded-xl border border-red-200 bg-red-50 p-5 dark:border-red-900 dark:bg-red-950">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
           Network Status
         </h2>
         <div className="font-mono text-lg">
           <div>RTT: {rtt !== null ? `${rtt}ms` : "—"}</div>
         </div>
-      </section>
+      </section> */}
       <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Controls
@@ -361,7 +361,7 @@ export default function MotionSensor() {
           <div />
         </div>
       </section>
-      <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
+      {/* <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           Accelerometer (m/s²)
         </h2>
@@ -392,7 +392,7 @@ export default function MotionSensor() {
           <div>β (beta): {formatValue(rotationRate.beta)}</div>
           <div>γ (gamma): {formatValue(rotationRate.gamma)}</div>
         </div>
-      </section>
+      </section> */}
 
       {interval !== null && (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
