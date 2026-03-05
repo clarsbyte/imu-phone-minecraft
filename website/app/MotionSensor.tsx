@@ -54,7 +54,7 @@ function ControlButton({
   );
 }
 
-export default function MotionSensor() {
+export default function MotionSensor({ target_server }: { target_server: string }) {
   const [permission, setPermission] = useState<"prompt" | "granted" | "denied" | "unsupported">("prompt");
   const [acceleration, setAcceleration] = useState<Acceleration>({ x: null, y: null, z: null });
   const [accelerationIncludingGravity, setAccelerationIncludingGravity] = useState<Acceleration>({
@@ -86,7 +86,7 @@ export default function MotionSensor() {
   const [interval, setInterval] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [rtt, setRtt] = useState<number | null>(null);
-  const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8765";
+  const websocketUrl = target_server;
   const [websocket, setWebsocket] = useState<WebSocket | null>(null);
   const lastMotionSendRef = useRef<number>(0);
 
@@ -166,7 +166,10 @@ export default function MotionSensor() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof DeviceMotionEvent === "undefined") {
+      setPermission("granted");
+      return;
+    }
     if (typeof (DeviceMotionEvent as unknown as { requestPermission?: () => Promise<string> }).requestPermission !== "function") {
       setPermission("granted");
     }
