@@ -3,7 +3,7 @@ import MotionSensor from "./MotionSensor";
 import { useState } from 'react';
 
 export default function Home() {
-  const [input, setInput] = useState<string>('localhost:8765');
+  const [input, setInput] = useState<string>('wss://your-tunnel.ngrok-free.app');
   const [confirmedServer, setConfirmedServer] = useState<string | null>(null);
 
   if (!confirmedServer) {
