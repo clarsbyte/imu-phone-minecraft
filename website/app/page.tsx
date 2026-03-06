@@ -13,6 +13,7 @@ export default function Home() {
           <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             IMU Minecraft Controller
           </h1>
+          <h2>Read <a target="_blank" className="underline" href="https://github.com/clarsbyte/imu-phone-minecraft">documentation</a></h2>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             Enter the WebSocket server address to connect.
           </p>
